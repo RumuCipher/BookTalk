@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rumu.booktalk.user.UserService;
+import rumu.booktalk.user.dto.LoginRequest;
+import rumu.booktalk.user.dto.LoginResponse;
 import rumu.booktalk.user.dto.RegisterRequest;
 import rumu.booktalk.user.dto.UserResponse;
+
 
 /**
  * Exposes public authentication-related HTTP endpoints.
@@ -19,9 +22,12 @@ import rumu.booktalk.user.dto.UserResponse;
 public class AuthController {
 
     private final UserService userService;
+    private final AuthService authService;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, AuthService authService) {
+
         this.userService = userService;
+        this.authService = authService;
     }
 
     /**
@@ -36,5 +42,18 @@ public class AuthController {
         UserResponse response = userService.register(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    /**
+     * Authenticates an existing user and returns a signed JWT token.
+     *
+     * @param request validated login credentials (email and password)
+     * @return HTTP 200 OK with the access token, token type, and expiration details
+     */
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(
+            @Valid @RequestBody LoginRequest request
+    ) {
+        return ResponseEntity.ok(authService.login(request));
     }
 }

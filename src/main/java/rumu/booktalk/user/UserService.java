@@ -11,7 +11,6 @@ import rumu.booktalk.user.dto.RegisterRequest;
 import rumu.booktalk.user.dto.UserResponse;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Locale;
 
 /**
  * Handles user-related business operations, including registration.
@@ -62,8 +61,7 @@ public class UserService {
     @Transactional
     public UserResponse register(RegisterRequest request) {
 
-        String normalizedEmail =
-                request.email().trim().toLowerCase(Locale.ROOT);
+        String normalizedEmail = EmailNormalizer.normalize(request.email());
 
         if(userRepository.existsByEmail(normalizedEmail)) {
             throw new EmailAlreadyExistsException(

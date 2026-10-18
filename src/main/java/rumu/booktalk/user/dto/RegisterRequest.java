@@ -3,6 +3,7 @@ package rumu.booktalk.user.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Carries and validates the information a customer submits
@@ -23,4 +24,11 @@ public record RegisterRequest(
         @Size(min = 8, max = 72, message = "Password must be between 8 to 72 characters")
         String password
 ) {
+        @Override
+        @NonNull
+        public String toString() {
+                return "RegisterRequest[name=" + name
+                        + ", email=" + email
+                        + ", password=[REDACTED]]";
+        }
 }
